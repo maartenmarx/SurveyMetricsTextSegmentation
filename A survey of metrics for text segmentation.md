@@ -95,30 +95,51 @@ For clustering, several entropy based metrics have been proposed, but as far as 
 
 ## Main findings
 
+* Probably that PQ is the best
+
 
 # All  the metrics (ruben)
+
+## Technicalities
 
 * all formal notation, really nicey uniform
 * like in the ELM paper
 * The task formal easy, domain, elements, segments
     * all "degenerate" baselines
-    * becuase 1D (lineair): binary predicting first element implies segmentation
+    * becuase 1D (lineair): 
+        *   binary predicting first element equivalent to  segmentation
+        *   but also "predicting neighbours in same document" equivalent to segmentation
 * The True and Hypothesized  segments
 * All the metrics, nciocely grouped
     * confusion matrix
     * window based
     * if needed, quickly some of the others
+
+## Theoretical results
+
 * Logical properties of the metrics and relations between them
     * range, open or closed, thus min and max
     * high is good or bad?
     * Max score iff perfect match ???
+    * Min score iff completey wrong
     * It would be great if we could already show some clear results on the goodness/generality of PQ (ie. that it repairs and generalizes NER partial match, and approaches NER perfect match )
 
  
 # Evaluation of the metrics
 
 
-## Warmup: Metrics in action (ruben)
+## Empirical results: comparing the metrics   (ruben)
+
+
+### TODO
+
+* welke taken (PSS, NER?, NER met flink langere entities, misschien zelfs hierarchical NER, extractive summarization?, text segmentation?)
+    * Moeten goede systemen en goede datasets voor zijn (dus net als bij het PQ paper)
+    * geen moeilijk gedoe voor onszelf: gewoon installeren en runnen.
+    * Liefst 3 systemen per taak, zodat we ook die "distinctiveness kunnen laten zien"
+* Wat meten we, en wat tonen we, en wat is onze boodschap nou?
+
+### eerdere eideeen 
 
 * **Onze gave KDE plaatjes en overzichten op een taak**
 * 
@@ -131,7 +152,12 @@ Before we compare the metrics on the quality criteria, let us first see them in 
 * We can also do the regresiion fitting and testing heree. 
 
 
-## In depth: metrics scrutinized
+## Evaluating the metrics one by one
+
+
+### Introduction
+
+> waarop evalueren we? hoe pakken we het aan?
 
 * In each section we shoulld end with a clear overview of all othe metrics from that section on our  4/5 quality criteria
 *  ability to discriminate
@@ -163,9 +189,9 @@ Before we compare the metrics on the quality criteria, let us first see them in 
 
 
 
-## $P_k$ and the degenerate systems claim
+#### $P_k$ and the degenerate systems claim
 
-The metric $P_k$ from [@beef_stat99] is a simpler version from the metric $PD$ by the same authors [refneeded]. $PD$ is is the probability that two sentences drawn randomly from the corpus are correctly identified (as belonging to the same document or to different documents). The much easier to implement version $P_k$ is described by  Pevzner and Hearst [@pevz_grit02] as follows: "$P_k$ is calculated by setting $k$ to half of the average true segment size and then computing penalties via a moving window of length $k$. At each location, the algorithm determines whether the two ends of the probe are in the same or different segments in the reference segmentation and increases a counter if the algorithm's segmentation disagrees. The resulting count is scaled between 0 and 1 by dividing by the number of measurements taken". 
+The metric $P_k$ from [@beef_stat99]() is a simpler version from the metric $PD$ by the same authors [refneeded]. $PD$ is is the probability that two sentences drawn randomly from the corpus are correctly identified (as belonging to the same document or to different documents). The much easier to implement version $P_k$ is described by  Pevzner and Hearst [@pevz_grit02]() as follows: "$P_k$ is calculated by setting $k$ to half of the average true segment size and then computing penalties via a moving window of length $k$. At each location, the algorithm determines whether the two ends of the probe are in the same or different segments in the reference segmentation and increases a counter if the algorithm's segmentation disagrees. The resulting count is scaled between 0 and 1 by dividing by the number of measurements taken". 
 
 $PD$ has a clear intuitive and mathematically sound meaning, but is hard to compute. The easy to implement  $P_k$ is also easily understood, but it is not immediate that it is a natural metric for sementation problems. Indeed the 5th problem Pevzner and Hearst indicate for $P_k$ ---and the only one that is not solved by their *WindowDiff* repair--- is that it is not clear what the scores mean [@pevz_grit02]. 
 But [@beef_stat99] contains another justification for $P_k$: 
@@ -231,6 +257,22 @@ Figure 3 shows the effect of widening the window, and we see that for all degene
 
 * Kort, vooral literatuur aanhalen over slechte eigenschappen
 
+
+# Hierarchical, Fuzzy border  and Overlapping segmentation
+
+* Bespreek hierarchical NER, en hoe zij het probleem oplossen. Nested NER Finkel Manning paper
+* Bespreek Amigo CICE-BCUbed aanpak. kort want oninterresant
+* Fuzzy borders: PSS, image PQ, boundary PQ
+* Overlapping: 3 soorten
+    * k-clique achtig, duidelijk niet overlappende core, grens is echt een grens
+    * amigo: alles mag
+    * clustered clustering: set of partial partitions.
+        * zonder labels per set
+        * Dus je moet nu 2 keer een match gaan vinden
+            * op set niveau
+            * op block niveau
+        * Dat kan heel goed met PQ, en dan de set-matching nemen met de hoogtse som van PQs. Dat is wel duur, maar die sets zijn toch niet zo groot? En is dit niet consraint satisfaction? Of knap-sack? 
+
 # Conclusion
 
-* Following  the evaluation of the NER metrics, we come to a nice balanced version between partial and exact match: PQ is best, PQmarx is even better ;-)
+* Following  the evaluation of the NER metrics, we come to a nice balanced version between partial and exact match: PQ is best 
